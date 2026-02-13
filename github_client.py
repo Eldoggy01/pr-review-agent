@@ -28,7 +28,7 @@ class GitHubClient:
         try:
             self.git.close()
         except Exception:
-            pass #TODO
+            pass
 
 
     # --- Pull Requests ---
