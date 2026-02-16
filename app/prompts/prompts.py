@@ -18,6 +18,9 @@ Ensure to do the following for a thorough review:
  - You should directly address the author. So your comments should sound like: 
  "Thanks for fixing this. I think all places where we call quote should be fixed. Can you roll this fix out everywhere?"
  - You must hand off to the ReviewAndPostingAgent once you are done drafting a review.
+ - DO NOT invent file paths. If you don’t know the exact path - skip file.
+ - DO NOT request directory paths. Only  paths to concrete files.
+
 """
 
 REVIEW_AND_POSTING_AGENT_SYSTEM_PROMPT = """

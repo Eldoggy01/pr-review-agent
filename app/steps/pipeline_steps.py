@@ -1,8 +1,7 @@
 from typing import Any, Dict, List, Optional
-from github_client import GitHubClient
-from schemas import PRDetails
+from app.client.github_client import GitHubClient
 from llama_index.core.workflow import Context
-
+from app.schemas.schemas import PRDetails
 
 
 #Просто маппер
@@ -39,6 +38,8 @@ def get_file_contents_step(client: GitHubClient, file_path: str, ref: Optional[s
     """
     Tool step: fetch file contents from repo.
     """
+
+    print("FILE PATH: "+file_path)
     return client.get_file_contents(file_path=file_path, ref=ref)
 
 
@@ -76,3 +77,9 @@ async def add_final_review_to_state(ctx: Context, final_review_comment: str) -> 
     """Useful for saving the final reviewed PR comment into shared workflow state."""
     await ctx.store.set("final_review_comment", final_review_comment)
     return "State updated with final_review_comment."
+
+def add_review_comment_to_pr_review_state(state, review_comment):
+    state["review_comment"] = review_comment
+
+def add_final_review_to_pr_review_state(state, final_review_comment):
+    state["final_review_comment"] = final_review_comment

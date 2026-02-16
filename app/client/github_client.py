@@ -4,7 +4,7 @@ import dotenv
 from github import Github
 
 
-dotenv.load_dotenv("config.env")
+dotenv.load_dotenv("../../config.env")
 
 
 class GitHubClient:

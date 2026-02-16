@@ -4,7 +4,8 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from service import run_pr_review_workflow
+from langgraph_hybrid import run_pr_review_workflow_langgraph
+from service_llamaindex import run_pr_review_workflow_llamaindex
 
 app = FastAPI(title="pr-review-agent API")
 
@@ -30,7 +31,23 @@ async def review(req: ReviewRequest):
     # токен можно брать из env, если не передан
     github_token = req.github_token or os.getenv("GITHUB_TOKEN")
 
-    result = await run_pr_review_workflow(
+    result = await run_pr_review_workflow_llamaindex(
+        repo_url=repo_url,
+        user_prompt=req.prompt,
+        github_token=github_token,
+    )
+    return result
+
+@app.post("/review-langgraph", response_model=ReviewResponse)
+async def review(req: ReviewRequest):
+    repo_url = req.repo_url or DEFAULT_REPO_URL
+    if not repo_url:
+        raise HTTPException(status_code=400, detail="repo_url is required (or set GITHUB_REPO_URL).")
+
+    # токен можно брать из env, если не передан
+    github_token = req.github_token or os.getenv("GITHUB_TOKEN")
+
+    result = await run_pr_review_workflow_langgraph(
         repo_url=repo_url,
         user_prompt=req.prompt,
         github_token=github_token,
